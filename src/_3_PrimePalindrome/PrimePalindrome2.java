@@ -3,25 +3,26 @@ package _3_PrimePalindrome;
 import java.util.ArrayList;
 import java.util.List;
 
-// working 0.6 secs
+// working 0.5 secs
 public class PrimePalindrome2 {
 
-    private static final int LIMIT = 100_000;
+    private static final int HI = 100_000;
+    private static final int LO = 10_000;
 
-    private static void findPalindrome() {
-        boolean[] notPrime = new boolean[LIMIT];
+    private static Composition findPalindrome() {
+        boolean[] notPrime = new boolean[HI - LO];
         List<Long> primes1 = new ArrayList<>();
         List<Long> primes3 = new ArrayList<>();
         List<Long> primes7 = new ArrayList<>();
         List<Long> primes9 = new ArrayList<>();
-        for (int i = 2; i < Math.sqrt(LIMIT); i++) {
+        for (int i = 2; i < Math.sqrt(HI); i++) {
             if (!notPrime[i]) {
-                for (int j = i * i; j < LIMIT; j += i) {
+                for (int j = i * i; j < HI - LO; j += i) {
                     notPrime[j] = true;
                 }
             }
         }
-        for (long i = 2; i < LIMIT; i++) {
+        for (long i = 2; i < HI - LO; i++) {
             if (!notPrime[(int) i]) {
                 if (i % 10 == 1) {
                     primes1.add(i);
@@ -52,7 +53,7 @@ public class PrimePalindrome2 {
                 max = elem;
             }
         }
-        System.out.printf("Solution is: %s = %s * %s%n", max.value, max.multiplier1, max.multiplier2);
+        return max;
     }
 
     private static List<Composition> addValues(List<Long> list1, List<Long> list2) {
@@ -80,10 +81,23 @@ public class PrimePalindrome2 {
         return number == reverse;
     }
 
+    private static class Composition {
+        long value;
+        long multiplier1;
+        long multiplier2;
+        Composition(long value, long multiplier1, long multiplier2){
+            this.value = value;
+            this.multiplier1 = multiplier1;
+            this.multiplier2 = multiplier2;
+        }
+    }
+
     public static void main(String[] args) {
         System.out.printf("Starting solution...%n");
         long startTime = System.currentTimeMillis();
-        findPalindrome();
+        Composition answer = findPalindrome();
+        System.out.printf("Solution is: %s = %s * %s%n",
+                answer.value, answer.multiplier1, answer.multiplier2);
         long currentTime = System.currentTimeMillis();
         long workTime = (currentTime - startTime);
         System.out.printf("Time elapsed: %s seconds", (double) workTime / 1_000);
